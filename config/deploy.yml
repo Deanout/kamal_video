@@ -1,0 +1,29 @@
+service: deanout
+image: deanin/kamal-video
+servers:
+  web:
+    hosts:
+      - 1.2.3.4
+    labels:
+      traefik.http.routers.deanout_secure.entrypoints: websecure
+      traefik.http.routers.deanout_secure.rule: Host(`deanout.com`)
+      traefik.http.routers.deanout_secure.tls: true
+
+registry:
+  username: deanin
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+env:
+  secret:
+    - RAILS_MASTER_KEY
+
+traefik:
+  options:
+    publish:
+      - "443:443"
+  args:
+    entryPoints.websecure.address: ":443"
+
+volumes:
+  - "storage:/rails/storage"
